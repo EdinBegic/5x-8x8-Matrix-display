@@ -485,8 +485,7 @@ class Max7219
 
         void popuniSveVektore(vector<uint8_t>&v4,vector<uint8_t>&v3,vector<uint8_t>&v2,vector<uint8_t>&v1,vector<uint8_t>&v0, int shift_poz, char znak)
         {
-            int maska = 0;
-            maska=0xff << (7 - shift_poz);  // Maska nam sluzi da bi odredili koji bit iz niza kojeg citamo, šiftamo u red displeja
+                                              // Maska nam sluzi da bi odredili koji bit iz niza kojeg citamo, šiftamo u red displeja
                                             // pri tome je obrnut raspored MSB i LSB kod pojedinih displeja
             for(int i=0;i<8;i++)            // Punimo sve redove odgovarajucim podacima
             {
@@ -654,7 +653,7 @@ class Max7219
            // ocistiDispleje();
         }
 
-        void prikaziStringScroll(const string& s)
+        void prikaziStringScroll(string& s)
         {
             for(int i = 0; i < 4; i++)
                s.push_back(' ');
