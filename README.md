@@ -3,9 +3,10 @@ An application that enables to drive five 8x8 matrix displays using the MAX7219 
 
 In order to implement the code, use the Mbed C/C++ IDE
 
-Tested on the LPC1114FN28 microcontroller
+Tested on the <b>LPC1114FN28</b> microcontroller
 
 The MAX7219.h class enables multiple modes of displaying text on the displays:
+
 1. Only one character on all five displays
 2. String is displayed character by character on the displays (5 characters at once)
 3. String is displayed in the scroll mode (the text shifts from right to left)
