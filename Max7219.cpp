@@ -466,12 +466,22 @@ class Max7219
             }
         }
         
-        void pomocnaShift(int maska, int shift_poz, int& vrijednost)
-        {
-            vrijednost = vrijednost & maska;            // AND-ovanjem vrijednosti znaka i maske, dobijamo bit kojeg shiftamo
-            vrijednost = vrijednost >> (7 - shift_poz); // posto je na suprotnom dijelu niza, potrebno je shiftati
+       void pomocnaShift(int shift_poz, int& vrijednost, bool prviDisplej)
+      {
+            if(prviDisplej)
+            {
+                int maska0 = 0xFF << (7 - shift_poz);
+                vrijednost = vrijednost & maska0;            // AND-ovanjem vrijednosti znaka i maske, dobijamo bit kojeg shiftamo
+                vrijednost = vrijednost >> (7 - shift_poz); // posto je na suprotnom dijelu niza, potrebno je shiftati
+            }
+            else
+            {
+                int maska1 = 0xFF << 7;
+                vrijednost = vrijednost & maska1;
+                vrijednost = vrijednost >> 7;
+            }
             vrijednost = vrijednost & 1;                // AND-ovanjem sa 1, osiguravamo da je nova vrijednost jedino taj bit kojeg prenosimo
-        }
+      }
 
         void popuniSveVektore(vector<uint8_t>&v4,vector<uint8_t>&v3,vector<uint8_t>&v2,vector<uint8_t>&v1,vector<uint8_t>&v0, int shift_poz, char znak)
         {
@@ -482,15 +492,16 @@ class Max7219
             {
                 int vrijednost4=ascii_niz[znak*8+i]; // vrijednost reda krajnjeg displeja ocitavamo iz unosa korisnika
                 int vrijednost3=v4[i];               // dok ostali displeji kupe vrijednost iz njima susjednog displeja
-              int vrijednost2=v3[i];
+                int vrijednost2=v3[i];
                 int vrijednost1=v2[i];
                 int vrijednost0=v1[i];
                 
-                pomocnaShift(maska,shift_poz,vrijednost4);
-                pomocnaShift(maska,shift_poz,vrijednost3);
-                pomocnaShift(maska,shift_poz,vrijednost2);
-                pomocnaShift(maska,shift_poz,vrijednost1);
-                pomocnaShift(maska,shift_poz,vrijednost0);
+                
+                pomocnaShift(shift_poz,vrijednost4,true);
+                pomocnaShift(shift_poz,vrijednost3,false);
+                pomocnaShift(shift_poz,vrijednost2,false);
+                pomocnaShift(shift_poz,vrijednost1,false);
+                pomocnaShift(shift_poz,vrijednost0,false);
                 
                 v4[i] = v4[i] << 1;     // Sve podatke pomjeramo jedno mjesto u lijevo
                 v3[i] = v3[i] << 1;
@@ -626,7 +637,8 @@ class Max7219
         void prikaziString(const string& s)
         {
             int redni_broj_uredjaja =  0;
-            
+
+
             for(int i = 0; i < s.length(); i++)
             {
                 if(redni_broj_uredjaja == broj_displeja)
@@ -644,6 +656,9 @@ class Max7219
 
         void prikaziStringScroll(const string& s)
         {
+            for(int i = 0; i < 4; i++)
+               s.push_back(' ');
+            
             // Koristit ćemo vectore kao kontenjersku klasu, koji će čuvati trenutne vrijednosti za redove na displejima
             vector<uint8_t> displej0, displej1, displej2, displej3, displej4;
             // Na početku displeji su ugašeni
