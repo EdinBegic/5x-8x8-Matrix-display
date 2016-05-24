@@ -1,0 +1,12 @@
+# depslib dependency file v1.0
+1464053655 source:c:\github\5x-8x8-matrix-display\matrix-display-simulation\main.cpp
+	<iostream>
+	<ctime>
+	<string>
+	<stdio.h>
+	<vector>
+	<bitset>
+	<cstdint>
+	<thread>
+	<chrono>
+
