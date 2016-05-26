@@ -466,7 +466,7 @@ class Max7219
             }
         }
         
-       void pomocnaShift(int shift_poz, int& vrijednost, bool prviDisplej)
+       void pomocnaShiftKolone(int shift_poz, int& vrijednost, bool prviDisplej)
       {
             if(prviDisplej)
             {
@@ -483,7 +483,7 @@ class Max7219
             vrijednost = vrijednost & 1;                // AND-ovanjem sa 1, osiguravamo da je nova vrijednost jedino taj bit kojeg prenosimo
       }
 
-        void popuniSveVektore(vector<uint8_t>&v4,vector<uint8_t>&v3,vector<uint8_t>&v2,vector<uint8_t>&v1,vector<uint8_t>&v0, int shift_poz, char znak)
+        void popuniSveVektorePoKolonama(vector<uint8_t>&v4,vector<uint8_t>&v3,vector<uint8_t>&v2,vector<uint8_t>&v1,vector<uint8_t>&v0, int shift_poz, char znak)
         {
                                               // Maska nam sluzi da bi odredili koji bit iz niza kojeg citamo, šiftamo u red displeja
                                             // pri tome je obrnut raspored MSB i LSB kod pojedinih displeja
@@ -515,7 +515,38 @@ class Max7219
                 v0[i] = v0[i] | vrijednost0;
             }
          }
-        
+    void popuniSveVektorePoRedovima(vector<uint8_t>&v4, vector<uint8_t>&v3,vector<uint8_t>&v2,vector<uint8_t>&v1,vector<uint8_t>&v0, int shift_poz, char znak)
+	{
+	    uint8_t temp1,temp2,temp3,temp4;
+	    for(int i = 0;i<8;i++)
+	    {
+	        int vrijednost4=ascii_niz[znak*8+shift_poz]; // vrijednost reda krajnjeg displeja ocitavamo iz unosa korisnika
+	        if(i == 7)
+	        {
+	            v4[i] =vrijednost4;
+	            v3[i] = temp4;
+	            v2[i] = temp3;
+	            v1[i] = temp2;
+	            v0[i] = temp1;
+	        }
+	        else
+	        {
+	            if(i == 0)
+	            {
+	                temp4 = v4[i];
+	                temp3 = v3[i];
+	                temp2 = v2[i];
+	                temp1 = v1[i];
+	            }
+	            v4[i] = v4[i+1];
+	            v3[i] = v3[i+1];
+	            v2[i] = v2[i+1];
+	            v1[i] = v1[i+1];
+	            v0[i] = v0[i+1];
+	        }
+	    }
+	}
+
         void dodajIntUString(int broj, string &s)
         {
             if(broj < 10)
@@ -656,7 +687,7 @@ class Max7219
         void prikaziStringScroll(string& s)
         {
             for(int i = 0; i < 4; i++)
-               s.push_back(' ');
+               s.push_back(' ');      
             
             // Koristit ćemo vectore kao kontenjersku klasu, koji će čuvati trenutne vrijednosti za redove na displejima
             vector<uint8_t> displej0, displej1, displej2, displej3, displej4;
@@ -679,11 +710,8 @@ class Max7219
             {
                 for(int j = 0; j <= 8; j++)
                 {
-                    popuniSveVektore(displej4,displej3,displej2,displej1,displej0,j,s[i]); // j će nam sluziti kao kursor na poziciju bita kojeg
+                    popuniSveVektorePoRedovima(displej4,displej3,displej2,displej1,displej0,j,s[i]); // j će nam sluziti kao kursor na poziciju bita kojeg
                                                                                            // pomjeramo ulijevo
-                    if(j==8) // Provjeriti moze li i bez ovog if-a
-                        popuniSveVektore(displej4,displej3,displej2,displej1,displej0,7,' ');
-                  
                     prikaziVektor(displej4, 4);                                       
                     prikaziVektor(displej3, 3);
                     prikaziVektor(displej2, 2);
