@@ -58,6 +58,7 @@ void unesiZnak()
 
 void prikazVremena()
 {
+   
     pc.printf("\n\rTrenunto vrijeme iznosi:\n\r");
     displeji.prikazVremena();
 }
